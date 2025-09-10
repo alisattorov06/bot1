@@ -1,52 +1,845 @@
 <!DOCTYPE html>
 <html lang="uz">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PUBG UC Farm</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #0a0a0a;
+            --bg-card: #1a1a1a;
+            --text-primary: #ffffff;
+            --text-gold: #ffd700;
+            --text-gray: #aaaaaa;
+            --accent: #ff9900;
+            --accent-dark: #cc7a00;
+            --border-neon: 1px solid rgba(255, 153, 0, 0.5);
+            --shadow-glow: 0 0 10px rgba(255, 153, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding-bottom: 70px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 100%;
+            padding: 15px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-bottom: var(--border-neon);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo img {
+            height: 40px;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--text-gold);
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .user-stats {
+            display: flex;
+            gap: 15px;
+            font-size: 0.9rem;
+        }
+
+        .stat {
+            background-color: var(--bg-card);
+            padding: 5px 10px;
+            border-radius: 15px;
+            border: var(--border-neon);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            border: var(--border-neon);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: var(--text-gold);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .click-area {
+            text-align: center;
+            padding: 30px 0;
+        }
+
+        .click-btn {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #ff9900, #cc7a00);
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(255, 153, 0, 0.5);
+            transition: transform 0.1s, box-shadow 0.1s;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto;
+        }
+
+        .click-btn:active {
+            transform: scale(0.95);
+            box-shadow: 0 0 10px rgba(255, 153, 0, 0.3);
+        }
+
+        .click-btn.disabled {
+            background: linear-gradient(145deg, #555, #333);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+            cursor: not-allowed;
+        }
+
+        .energy-info {
+            margin-top: 20px;
+            font-size: 1rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background-color: #333;
+            border-radius: 5px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff9900, #ffcc00);
+            border-radius: 5px;
+            width: 70%;
+        }
+
+        .boost-btn {
+            background: linear-gradient(145deg, #ff3366, #cc0044);
+            border: none;
+            padding: 10px 15px;
+            border-radius: 20px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .channel-list {
+            list-style: none;
+        }
+
+        .channel-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .channel-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .subscribe-btn {
+            background: linear-gradient(145deg, #3399ff, #0066cc);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 15px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .subscribe-btn.subscribed {
+            background: linear-gradient(145deg, #33cc33, #009900);
+        }
+
+        .uc-packages {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .uc-card {
+            background: linear-gradient(145deg, #1a1a1a, #2a2a2a);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            border: var(--border-neon);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .uc-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .uc-amount {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--text-gold);
+        }
+
+        .uc-price {
+            margin-top: 5px;
+            color: var(--text-gray);
+        }
+
+        .form-group {
+            margin: 20px 0;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 8px;
+            background-color: #2a2a2a;
+            border: 1px solid #444;
+            color: white;
+            margin-top: 5px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(145deg, #ff9900, #cc7a00);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            border-top: var(--border-neon);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-gray);
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .nav-item.active {
+            color: var(--accent);
+        }
+
+        .nav-icon {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+
+        .admin-section {
+            display: none;
+        }
+
+        .admin-panel {
+            background: linear-gradient(145deg, #1a1a1a, #0a0a0a);
+            border: var(--border-neon);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .admin-section.active {
+            display: block;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .stat-box {
+            background-color: var(--bg-card);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border: var(--border-neon);
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--text-gold);
+            margin: 10px 0;
+        }
+
+        .stat-label {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+
+        .top-users {
+            margin: 20px 0;
+        }
+
+        .user-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 15px;
+            background-color: var(--bg-card);
+            margin: 8px 0;
+            border-radius: 8px;
+            border: var(--border-neon);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        /* Responsive design */
+        @media (min-width: 768px) {
+            .container {
+                max-width: 600px;
+                margin: 0 auto;
+            }
+
+            .uc-packages {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+    </style>
 </head>
+
 <body>
-    <div class="app-container">
-        <!-- Sahifa kontentlari -->
-        <div id="page-click" class="page active">
-            <h2>🎮 Bosish & Ball yig‘ish</h2>
-            <div class="stats">
-                <div>Balans: <span id="balance">0</span> ball</div>
-                <div>Level: <span id="level">1</span></div>
-                <div>Qolgan bosish: <span id="energy">10</span></div>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <i class="fas fa-gamepad"></i>
+                <div class="logo-text">PUBG UC FARM</div>
             </div>
-            <button id="click-btn" class="btn-click">BOS (+0.1)</button>
-            <div id="cooldown" class="cooldown hidden">⏳ 2 soatdan keyin qayta urinib ko‘ring</div>
-            <button id="boost-btn" class="btn-boost hidden">⚡ Energiya tezlashtir (5 ball)</button>
-        </div>
-
-        <div id="page-channels" class="page">
-            <h2>📢 Kanallarga Obuna</h2>
-            <div id="channels-list"></div>
-            <h3>🔗 Referal havolangiz:</h3>
-            <div id="ref-link" class="ref-link">t.me/ucfarmbot?start=ref12345</div>
-            <div>Do‘stlar qo‘shganingiz uchun: +5 ball</div>
-        </div>
-
-        <div id="page-exchange" class="page">
-            <h2>💱 UC Ayirboshlash</h2>
-            <input type="text" id="pubg-id" placeholder="PUBG ID raqamingizni kiriting" class="input-pubg">
-            <div class="uc-packages">
-                <div class="uc-card" data-cost="6000" data-uc="60">60 UC — 6000 ball</div>
-                <div class="uc-card" data-cost="32500" data-uc="325">325 UC — 32500 ball</div>
+            <div class="user-stats">
+                <div class="stat">
+                    <i class="fas fa-coins"></i>
+                    <span id="balance">125.75</span>
+                </div>
+                <div class="stat">
+                    <i class="fas fa-bolt"></i>
+                    <span id="level">1</span>
+                </div>
             </div>
-            <button id="exchange-btn" class="btn-exchange">✅ So‘rov yuborish</button>
         </div>
 
-        <!-- Navigatsiya (pastda) -->
-        <div class="nav">
-            <button class="nav-btn active" data-page="page-click">🎮</button>
-            <button class="nav-btn" data-page="page-channels">📢</button>
-            <button class="nav-btn" data-page="page-exchange">💱</button>
+        <!-- Sahifa 1: Bosish va Ball yig'ish -->
+        <div class="page active" id="page-click">
+            <div class="card">
+                <h2 class="card-title">
+                    <i class="fas fa-hand-point-up"></i>
+                    Bosish orqali ball yig'ing
+                </h2>
+                <div class="click-area">
+                    <button class="click-btn" id="click-button">
+                        <span>BOS</span>
+                        <span>+<span id="click-value">0.10</span></span>
+                    </button>
+                    <div class="energy-info">
+                        <p>Energiya: <span id="energy">10</span>/10</p>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="energy-bar"></div>
+                        </div>
+                        <p id="cooldown-info">Keyingi energiya: 2:00:00</p>
+                        <button class="boost-btn" id="boost-button">
+                            <i class="fas fa-bolt"></i>
+                            Energiyani to'ldirish (5 ball)
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="card-title">
+                    <i class="fas fa-chart-line"></i>
+                    Statistikangiz
+                </h2>
+                <p>Jami ball: <span id="total-points">125.75</span></p>
+                <p>Keyingi level: <span id="next-level">50</span> ball</p>
+                <p>Level: <span id="current-level">1</span></p>
+            </div>
+        </div>
+
+        <!-- Sahifa 2: Kanallarga Obuna & Referal -->
+        <div class="page" id="page-subscribe">
+            <div class="card">
+                <h2 class="card-title">
+                    <i class="fas fa-users"></i>
+                    Kanallarga obuna bo'ling
+                </h2>
+                <ul class="channel-list">
+                    <li class="channel-item">
+                        <div class="channel-info">
+                            <i class="fab fa-telegram"></i>
+                            <div>
+                                <h3>PUBG Uzbekistan</h3>
+                                <p>5 ball</p>
+                            </div>
+                        </div>
+                        <button class="subscribe-btn">Obuna bo'lish</button>
+                    </li>
+                    <li class="channel-item">
+                        <div class="channel-info">
+                            <i class="fab fa-telegram"></i>
+                            <div>
+                                <h3>PUBG Mobile News</h3>
+                                <p>5 ball</p>
+                            </div>
+                        </div>
+                        <button class="subscribe-btn">Obuna bo'lish</button>
+                    </li>
+                    <li class="channel-item">
+                        <div class="channel-info">
+                            <i class="fab fa-telegram"></i>
+                            <div>
+                                <h3>UC Sotib Olish</h3>
+                                <p>5 ball</p>
+                            </div>
+                        </div>
+                        <button class="subscribe-btn">Obuna bo'lish</button>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h2 class="card-title">
+                    <i class="fas fa-user-plus"></i>
+                    Do'stlaringizni taklif qiling
+                </h2>
+                <p>Har bir taklif qilgan do'stingiz uchun 5 ball oling</p>
+                <div class="form-group">
+                    <label>Referal havolangiz:</label>
+                    <div style="display: flex; gap: 10px; margin-top: 10px;">
+                        <input type="text" class="form-input" id="ref-link"
+                            value="https://t.me/pubgucfarm_bot?start=ref12345" readonly>
+                        <button class="submit-btn" style="width: auto;" onclick="copyRefLink()">Nusxa olish</button>
+                    </div>
+                </div>
+                <p>Jami taklif qilgan do'stlaringiz: <strong>3</strong></p>
+            </div>
+        </div>
+
+        <!-- Sahifa 3: UC Ayirboshlash -->
+        <div class="page" id="page-exchange">
+            <div class="card">
+                <h2 class="card-title">
+                    <i class="fas fa-exchange-alt"></i>
+                    UC Ayirboshlash
+                </h2>
+                <p>Ballaringizni PUBG UC ga aylantiring</p>
+
+                <div class="uc-packages">
+                    <div class="uc-card">
+                        <div class="uc-amount">60 UC</div>
+                        <div class="uc-price">6000 ball</div>
+                    </div>
+                    <div class="uc-card">
+                        <div class="uc-amount">125 UC</div>
+                        <div class="uc-price">12500 ball</div>
+                    </div>
+                    <div class="uc-card">
+                        <div class="uc-amount">250 UC</div>
+                        <div class="uc-price">25000 ball</div>
+                    </div>
+                    <div class="uc-card">
+                        <div class="uc-amount">500 UC</div>
+                        <div class="uc-price">50000 ball</div>
+                    </div>
+                    <div class="uc-card">
+                        <div class="uc-amount">1000 UC</div>
+                        <div class="uc-price">100000 ball</div>
+                    </div>
+                    <div class="uc-card">
+                        <div class="uc-amount">1500 UC</div>
+                        <div class="uc-price">150000 ball</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>PUBG ID raqamingiz:</label>
+                    <input type="text" class="form-input" placeholder="5161234567">
+                </div>
+
+                <div class="form-group">
+                    <label>Ismingiz:</label>
+                    <input type="text" class="form-input" placeholder="Ismingiz">
+                </div>
+
+                <button class="submit-btn">So'rov yuborish</button>
+            </div>
+
+            <div class="card">
+                <h2 class="card-title">
+                    <i class="fas fa-history"></i>
+                    So'rovlar tarixi
+                </h2>
+                <p>Hozircha so'rovlar mavjud emas</p>
+            </div>
+        </div>
+
+        <!-- Admin Panel (faqat adminlar uchun) -->
+        <div class="admin-section" id="admin-panel">
+            <div class="card">
+                <h2 class="card-title">
+                    <i class="fas fa-crown"></i>
+                    Admin Panel
+                </h2>
+
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-label">Jami Foydalanuvchilar</div>
+                        <div class="stat-value">1,243</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Bugun Topshirilgan UC</div>
+                        <div class="stat-value">12,560</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Faol Foydalanuvchilar</div>
+                        <div class="stat-value">587</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Kunlik Ball</div>
+                        <div class="stat-value">75,432</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="card-title">
+                    <i class="fas fa-trophy"></i>
+                    Top Foydalanuvchilar
+                </h2>
+                <div class="top-users">
+                    <div class="user-row">
+                        <div class="user-info">
+                            <div class="user-avatar">A</div>
+                            <div>Azizbek</div>
+                        </div>
+                        <div>12,540 ball</div>
+                    </div>
+                    <div class="user-row">
+                        <div class="user-info">
+                            <div class="user-avatar">S</div>
+                            <div>Sanjar</div>
+                        </div>
+                        <div>10,850 ball</div>
+                    </div>
+                    <div class="user-row">
+                        <div class="user-info">
+                            <div class="user-avatar">J</div>
+                            <div>Javohir</div>
+                        </div>
+                        <div>9,320 ball</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pastki navigatsiya -->
+        <div class="bottom-nav">
+            <div class="nav-item active" data-page="page-click">
+                <i class="fas fa-hand-point-up nav-icon"></i>
+                <span>Bosish</span>
+            </div>
+            <div class="nav-item" data-page="page-subscribe">
+                <i class="fas fa-users nav-icon"></i>
+                <span>Obuna</span>
+            </div>
+            <div class="nav-item" data-page="page-exchange">
+                <i class="fas fa-exchange-alt nav-icon"></i>
+                <span>UC Almashish</span>
+            </div>
+            <div class="nav-item" data-page="admin-panel" id="admin-nav" style="display: none;">
+                <i class="fas fa-crown nav-icon"></i>
+                <span>Admin</span>
+            </div>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        // Sahifalar navigatsiyasi
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function () {
+                // Nav aktivligini o'zgartirish
+                document.querySelectorAll('.nav-item').forEach(nav => {
+                    nav.classList.remove('active');
+                });
+                this.classList.add('active');
+
+                // Sahifalarni ko'rsatish/yashirish
+                const pageId = this.getAttribute('data-page');
+                document.querySelectorAll('.page').forEach(page => {
+                    page.classList.remove('active');
+                });
+                document.querySelectorAll('.admin-section').forEach(section => {
+                    section.classList.remove('active');
+                });
+
+                if (pageId === 'admin-panel') {
+                    document.getElementById('admin-panel').classList.add('active');
+                } else {
+                    document.getElementById(pageId).classList.add('active');
+                }
+            });
+        });
+
+        // Bosish funktsiyasi
+        const clickButton = document.getElementById('click-button');
+        const energyElement = document.getElementById('energy');
+        const balanceElement = document.getElementById('balance');
+        const totalPointsElement = document.getElementById('total-points');
+        const clickValueElement = document.getElementById('click-value');
+        const levelElement = document.getElementById('level');
+        const currentLevelElement = document.getElementById('current-level');
+        const nextLevelElement = document.getElementById('next-level');
+        const energyBar = document.getElementById('energy-bar');
+        const cooldownInfo = document.getElementById('cooldown-info');
+        const boostButton = document.getElementById('boost-button');
+
+        let energy = 10;
+        let balance = 125.75;
+        let totalPoints = 125.75;
+        let clickValue = 0.10;
+        let level = 1;
+        let nextLevel = 50;
+        let cooldownTime = 7200; // 2 soat sekundlarda
+        let cooldownInterval;
+
+        clickButton.addEventListener('click', function () {
+            if (energy > 0) {
+                // Ball qo'shish
+                balance += clickValue;
+                totalPoints += clickValue;
+                energy--;
+
+                // Yangilash
+                updateUI();
+
+                // Level tekshirish
+                checkLevelUp();
+
+                // Energiya tugaganda
+                if (energy === 0) {
+                    startCooldown();
+                }
+            }
+        });
+
+        // Energiya to'ldirish
+        boostButton.addEventListener('click', function () {
+            if (balance >= 5 && energy < 10) {
+                balance -= 5;
+                energy = Math.min(energy + 5, 10);
+                updateUI();
+
+                // Agar cooldown davom etayotgan bo'lsa, to'xtatish
+                if (cooldownInterval) {
+                    clearInterval(cooldownInterval);
+                    cooldownInfo.textContent = "Energiya to'liq!";
+                }
+            }
+        });
+
+        function startCooldown() {
+            let timeLeft = cooldownTime;
+
+            cooldownInterval = setInterval(function () {
+                timeLeft--;
+
+                const hours = Math.floor(timeLeft / 3600);
+                const minutes = Math.floor((timeLeft % 3600) / 60);
+                const seconds = timeLeft % 60;
+
+                cooldownInfo.textContent = `Keyingi energiya: ${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(cooldownInterval);
+                    energy = 10;
+                    updateUI();
+                    cooldownInfo.textContent = "Energiya to'liq!";
+                }
+            }, 1000);
+        }
+
+        function checkLevelUp() {
+            if (totalPoints >= nextLevel) {
+                level++;
+                clickValue = parseFloat((0.10 + (level - 1) * 0.01).toFixed(2));
+                nextLevel = nextLevel * 2;
+
+                // Yangilash
+                levelElement.textContent = level;
+                currentLevelElement.textContent = level;
+                nextLevelElement.textContent = nextLevel;
+                clickValueElement.textContent = clickValue.toFixed(2);
+
+                // Level up animatsiya
+                clickButton.style.animation = 'none';
+                setTimeout(() => {
+                    clickButton.style.animation = 'pulse 0.5s';
+                }, 10);
+            }
+        }
+
+        function updateUI() {
+            energyElement.textContent = energy;
+            balanceElement.textContent = balance.toFixed(2);
+            totalPointsElement.textContent = totalPoints.toFixed(2);
+            energyBar.style.width = `${energy * 10}%`;
+
+            // Boost tugmasini faollashtirish
+            if (balance >= 5 && energy < 10) {
+                boostButton.disabled = false;
+                boostButton.style.opacity = '1';
+            } else {
+                boostButton.disabled = true;
+                boostButton.style.opacity = '0.7';
+            }
+
+            // Bosish tugmasini faollashtirish
+            if (energy > 0) {
+                clickButton.disabled = false;
+                clickButton.classList.remove('disabled');
+            } else {
+                clickButton.disabled = true;
+                clickButton.classList.add('disabled');
+            }
+        }
+
+        // Referal havolani nusxalash
+        function copyRefLink() {
+            const refLink = document.getElementById('ref-link');
+            refLink.select();
+            document.execCommand('copy');
+            alert('Referal havolasi nusxalandi!');
+        }
+
+        // Admin panelni tekshirish (faqat namuna)
+        // Haqiqiy loyihada bu backend tomonidan tekshiriladi
+        const isAdmin = false; // O'zgartirishingiz mumkin
+        if (isAdmin) {
+            document.getElementById('admin-nav').style.display = 'flex';
+        }
+
+        // Dizayn animatsiyalari
+        document.addEventListener('DOMContentLoaded', function () {
+            // Bosish tugmasi uchun puls animatsiya
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes pulse {
+                    0% { transform: scale(1); box-shadow: 0 0 20px rgba(255, 153, 0, 0.5); }
+                    50% { transform: scale(1.05); box-shadow: 0 0 30px rgba(255, 153, 0, 0.8); }
+                    100% { transform: scale(1); box-shadow: 0 0 20px rgba(255, 153, 0, 0.5); }
+                }
+            `;
+            document.head.appendChild(style);
+        });
+
+        // Dummy data for demonstration
+        updateUI();
+    </script>
 </body>
+
 </html>
