@@ -1,845 +1,403 @@
 <!DOCTYPE html>
 <html lang="uz">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PUBG UC Farm</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>PUBG UC Farm WebApp</title>
     <style>
-        :root {
-            --bg-dark: #0a0a0a;
-            --bg-card: #1a1a1a;
-            --text-primary: #ffffff;
-            --text-gold: #ffd700;
-            --text-gray: #aaaaaa;
-            --accent: #ff9900;
-            --accent-dark: #cc7a00;
-            --border-neon: 1px solid rgba(255, 153, 0, 0.5);
-            --shadow-glow: 0 0 10px rgba(255, 153, 0, 0.3);
-        }
-
-        * {
+        /* CSS Styles - PUBG uslubi: qora, kulrang, oltin rang palitrasi */
+        body {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-dark);
-            color: var(--text-primary);
-            min-height: 100vh;
-            padding-bottom: 70px;
-            overflow-x: hidden;
-        }
-
-        .container {
-            max-width: 100%;
-            padding: 15px;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 10px;
-            background-color: rgba(0, 0, 0, 0.7);
-            border-bottom: var(--border-neon);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .logo img {
-            height: 40px;
-        }
-
-        .logo-text {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--text-gold);
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-        }
-
-        .user-stats {
-            display: flex;
-            gap: 15px;
-            font-size: 0.9rem;
-        }
-
-        .stat {
-            background-color: var(--bg-card);
-            padding: 5px 10px;
-            border-radius: 15px;
-            border: var(--border-neon);
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .page {
-            display: none;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .page.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
-        }
-
-        .card {
-            background-color: var(--bg-card);
-            border-radius: 10px;
-            padding: 20px;
-            margin: 15px 0;
-            border: var(--border-neon);
-            box-shadow: var(--shadow-glow);
-        }
-
-        .card-title {
-            font-size: 1.2rem;
-            margin-bottom: 15px;
-            color: var(--text-gold);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .click-area {
-            text-align: center;
-            padding: 30px 0;
-        }
-
-        .click-btn {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            background: linear-gradient(145deg, #ff9900, #cc7a00);
-            border: none;
-            color: white;
-            font-size: 1.5rem;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 0 20px rgba(255, 153, 0, 0.5);
-            transition: transform 0.1s, box-shadow 0.1s;
+            font-family: Arial, sans-serif;
+            background-color: #1a1a1a; /* Qora fon */
+            color: #ffd700; /* Oltin matn */
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            margin: 0 auto;
-        }
-
-        .click-btn:active {
-            transform: scale(0.95);
-            box-shadow: 0 0 10px rgba(255, 153, 0, 0.3);
-        }
-
-        .click-btn.disabled {
-            background: linear-gradient(145deg, #555, #333);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
-            cursor: not-allowed;
-        }
-
-        .energy-info {
-            margin-top: 20px;
-            font-size: 1rem;
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 10px;
-            background-color: #333;
-            border-radius: 5px;
-            margin: 10px 0;
+            height: 100vh;
             overflow: hidden;
         }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #ff9900, #ffcc00);
-            border-radius: 5px;
-            width: 70%;
+        .container {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
         }
-
-        .boost-btn {
-            background: linear-gradient(145deg, #ff3366, #cc0044);
-            border: none;
-            padding: 10px 15px;
-            border-radius: 20px;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 15px;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .channel-list {
-            list-style: none;
-        }
-
-        .channel-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .channel-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .subscribe-btn {
-            background: linear-gradient(145deg, #3399ff, #0066cc);
-            border: none;
-            padding: 8px 15px;
-            border-radius: 15px;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .subscribe-btn.subscribed {
-            background: linear-gradient(145deg, #33cc33, #009900);
-        }
-
-        .uc-packages {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .uc-card {
-            background: linear-gradient(145deg, #1a1a1a, #2a2a2a);
-            border-radius: 10px;
-            padding: 15px;
-            text-align: center;
-            border: var(--border-neon);
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-
-        .uc-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-glow);
-        }
-
-        .uc-amount {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--text-gold);
-        }
-
-        .uc-price {
-            margin-top: 5px;
-            color: var(--text-gray);
-        }
-
-        .form-group {
-            margin: 20px 0;
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 12px 15px;
-            border-radius: 8px;
-            background-color: #2a2a2a;
-            border: 1px solid #444;
-            color: white;
-            margin-top: 5px;
-        }
-
-        .submit-btn {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(145deg, #ff9900, #cc7a00);
-            border: none;
-            border-radius: 8px;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            font-size: 1rem;
-        }
-
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background-color: rgba(0, 0, 0, 0.9);
+        .nav {
             display: flex;
             justify-content: space-around;
-            padding: 12px 0;
-            border-top: var(--border-neon);
+            background-color: #333; /* Kulrang */
+            padding: 10px;
+            border-top: 1px solid #ffd700; /* Oltin border */
         }
-
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: var(--text-gray);
-            font-size: 0.8rem;
+        .nav button {
+            background: none;
+            border: none;
+            color: #ffd700;
+            font-size: 24px;
             cursor: pointer;
-            transition: color 0.3s;
         }
-
-        .nav-item.active {
-            color: var(--accent);
+        .nav button.active {
+            color: #fff; /* Faol holatda oq */
         }
-
-        .nav-icon {
-            font-size: 1.2rem;
-            margin-bottom: 5px;
+        /* Neon borderlar va shaffof cardlar */
+        .card {
+            background: rgba(51, 51, 51, 0.8); /* Shaffof kulrang */
+            border: 1px solid #ffd700;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            box-shadow: 0 0 10px #ffd700; /* Neon effekt */
         }
-
-        .admin-section {
+        .button {
+            background-color: #ffd700;
+            color: #1a1a1a;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        .button:hover {
+            background-color: #fff;
+        }
+        .hidden {
             display: none;
         }
-
-        .admin-panel {
-            background: linear-gradient(145deg, #1a1a1a, #0a0a0a);
-            border: var(--border-neon);
-            border-radius: 10px;
-            padding: 20px;
-            margin: 20px 0;
+        /* Smooth transition uchun */
+        .page {
+            transition: opacity 0.3s ease;
         }
-
-        .admin-section.active {
-            display: block;
+        .page.hidden {
+            opacity: 0;
         }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin: 15px 0;
+        /* Bosish tugmasi */
+        #tapButton {
+            width: 100%;
+            height: 200px;
+            font-size: 48px;
+            background: url('pubg-tap-bg.png') center/cover; /* PUBG dizayn rasmi, o'zingiz qo'shing */
         }
-
-        .stat-box {
-            background-color: var(--bg-card);
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-            border: var(--border-neon);
-        }
-
-        .stat-value {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: var(--text-gold);
+        /* Level progress */
+        .progress {
+            background: #333;
+            height: 10px;
+            border-radius: 5px;
             margin: 10px 0;
         }
-
-        .stat-label {
-            color: var(--text-gray);
-            font-size: 0.9rem;
-        }
-
-        .top-users {
-            margin: 20px 0;
-        }
-
-        .user-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 12px 15px;
-            background-color: var(--bg-card);
-            margin: 8px 0;
-            border-radius: 8px;
-            border: var(--border-neon);
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: #333;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-        }
-
-        /* Responsive design */
-        @media (min-width: 768px) {
-            .container {
-                max-width: 600px;
-                margin: 0 auto;
-            }
-
-            .uc-packages {
-                grid-template-columns: repeat(3, 1fr);
-            }
-
-            .stats-grid {
-                grid-template-columns: repeat(4, 1fr);
-            }
+        .progress-bar {
+            background: #ffd700;
+            height: 100%;
+            border-radius: 5px;
         }
     </style>
 </head>
-
 <body>
     <div class="container">
-        <div class="header">
-            <div class="logo">
-                <i class="fas fa-gamepad"></i>
-                <div class="logo-text">PUBG UC FARM</div>
-            </div>
-            <div class="user-stats">
-                <div class="stat">
-                    <i class="fas fa-coins"></i>
-                    <span id="balance">125.75</span>
-                </div>
-                <div class="stat">
-                    <i class="fas fa-bolt"></i>
-                    <span id="level">1</span>
-                </div>
-            </div>
-        </div>
-
         <!-- Sahifa 1: Bosish va Ball yig'ish -->
-        <div class="page active" id="page-click">
+        <div id="page1" class="page">
+            <h2>🎮 Bosish va Ball yig'ish</h2>
             <div class="card">
-                <h2 class="card-title">
-                    <i class="fas fa-hand-point-up"></i>
-                    Bosish orqali ball yig'ing
-                </h2>
-                <div class="click-area">
-                    <button class="click-btn" id="click-button">
-                        <span>BOS</span>
-                        <span>+<span id="click-value">0.10</span></span>
-                    </button>
-                    <div class="energy-info">
-                        <p>Energiya: <span id="energy">10</span>/10</p>
-                        <div class="progress-bar">
-                            <div class="progress-fill" id="energy-bar"></div>
-                        </div>
-                        <p id="cooldown-info">Keyingi energiya: 2:00:00</p>
-                        <button class="boost-btn" id="boost-button">
-                            <i class="fas fa-bolt"></i>
-                            Energiyani to'ldirish (5 ball)
-                        </button>
-                    </div>
+                <p>Balans: <span id="balance">0</span> ball</p>
+                <p>Level: <span id="level">1</span></p>
+                <p>Energiya: <span id="energy">10/10</span></p>
+                <p>Kutish vaqti: <span id="cooldown">0</span> soat</p>
+                <button id="tapButton" class="button">Bosish (+<span id="tapValue">0.1</span>)</button>
+                <div class="progress">
+                    <div id="levelProgress" class="progress-bar" style="width: 0%;"></div>
                 </div>
-            </div>
-
-            <div class="card">
-                <h2 class="card-title">
-                    <i class="fas fa-chart-line"></i>
-                    Statistikangiz
-                </h2>
-                <p>Jami ball: <span id="total-points">125.75</span></p>
-                <p>Keyingi level: <span id="next-level">50</span> ball</p>
-                <p>Level: <span id="current-level">1</span></p>
+                <button id="boostButton" class="button hidden">Energiya Boost (5 ball)</button>
             </div>
         </div>
 
         <!-- Sahifa 2: Kanallarga Obuna & Referal -->
-        <div class="page" id="page-subscribe">
+        <div id="page2" class="page hidden">
+            <h2>📢 Kanallarga Obuna & Referal</h2>
             <div class="card">
-                <h2 class="card-title">
-                    <i class="fas fa-users"></i>
-                    Kanallarga obuna bo'ling
-                </h2>
-                <ul class="channel-list">
-                    <li class="channel-item">
-                        <div class="channel-info">
-                            <i class="fab fa-telegram"></i>
-                            <div>
-                                <h3>PUBG Uzbekistan</h3>
-                                <p>5 ball</p>
-                            </div>
-                        </div>
-                        <button class="subscribe-btn">Obuna bo'lish</button>
-                    </li>
-                    <li class="channel-item">
-                        <div class="channel-info">
-                            <i class="fab fa-telegram"></i>
-                            <div>
-                                <h3>PUBG Mobile News</h3>
-                                <p>5 ball</p>
-                            </div>
-                        </div>
-                        <button class="subscribe-btn">Obuna bo'lish</button>
-                    </li>
-                    <li class="channel-item">
-                        <div class="channel-info">
-                            <i class="fab fa-telegram"></i>
-                            <div>
-                                <h3>UC Sotib Olish</h3>
-                                <p>5 ball</p>
-                            </div>
-                        </div>
-                        <button class="subscribe-btn">Obuna bo'lish</button>
-                    </li>
-                </ul>
+                <h3>Kanallar ro'yxati</h3>
+                <ul id="channelsList"></ul>
             </div>
-
             <div class="card">
-                <h2 class="card-title">
-                    <i class="fas fa-user-plus"></i>
-                    Do'stlaringizni taklif qiling
-                </h2>
-                <p>Har bir taklif qilgan do'stingiz uchun 5 ball oling</p>
-                <div class="form-group">
-                    <label>Referal havolangiz:</label>
-                    <div style="display: flex; gap: 10px; margin-top: 10px;">
-                        <input type="text" class="form-input" id="ref-link"
-                            value="https://t.me/pubgucfarm_bot?start=ref12345" readonly>
-                        <button class="submit-btn" style="width: auto;" onclick="copyRefLink()">Nusxa olish</button>
-                    </div>
-                </div>
-                <p>Jami taklif qilgan do'stlaringiz: <strong>3</strong></p>
+                <h3>Referal havola</h3>
+                <p id="referralLink">t.me/botusername?start=refYourID</p>
+                <button id="copyReferral" class="button">Nusxa olish</button>
             </div>
         </div>
 
         <!-- Sahifa 3: UC Ayirboshlash -->
-        <div class="page" id="page-exchange">
-            <div class="card">
-                <h2 class="card-title">
-                    <i class="fas fa-exchange-alt"></i>
-                    UC Ayirboshlash
-                </h2>
-                <p>Ballaringizni PUBG UC ga aylantiring</p>
-
-                <div class="uc-packages">
-                    <div class="uc-card">
-                        <div class="uc-amount">60 UC</div>
-                        <div class="uc-price">6000 ball</div>
-                    </div>
-                    <div class="uc-card">
-                        <div class="uc-amount">125 UC</div>
-                        <div class="uc-price">12500 ball</div>
-                    </div>
-                    <div class="uc-card">
-                        <div class="uc-amount">250 UC</div>
-                        <div class="uc-price">25000 ball</div>
-                    </div>
-                    <div class="uc-card">
-                        <div class="uc-amount">500 UC</div>
-                        <div class="uc-price">50000 ball</div>
-                    </div>
-                    <div class="uc-card">
-                        <div class="uc-amount">1000 UC</div>
-                        <div class="uc-price">100000 ball</div>
-                    </div>
-                    <div class="uc-card">
-                        <div class="uc-amount">1500 UC</div>
-                        <div class="uc-price">150000 ball</div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>PUBG ID raqamingiz:</label>
-                    <input type="text" class="form-input" placeholder="5161234567">
-                </div>
-
-                <div class="form-group">
-                    <label>Ismingiz:</label>
-                    <input type="text" class="form-input" placeholder="Ismingiz">
-                </div>
-
-                <button class="submit-btn">So'rov yuborish</button>
+        <div id="page3" class="page hidden">
+            <h2>💱 UC Ayirboshlash</h2>
+            <div id="ucPackages" class="card">
+                <!-- Paketlar dinamik qo'shiladi -->
             </div>
-
             <div class="card">
-                <h2 class="card-title">
-                    <i class="fas fa-history"></i>
-                    So'rovlar tarixi
-                </h2>
-                <p>Hozircha so'rovlar mavjud emas</p>
+                <input type="text" id="pubgID" placeholder="PUBG ID kiriting">
+                <button id="exchangeButton" class="button">Ayirboshlash</button>
             </div>
         </div>
 
-        <!-- Admin Panel (faqat adminlar uchun) -->
-        <div class="admin-section" id="admin-panel">
+        <!-- Admin Panel (Alohida, admin uchun) -->
+        <div id="adminPage" class="page hidden">
+            <h2>Admin Panel</h2>
             <div class="card">
-                <h2 class="card-title">
-                    <i class="fas fa-crown"></i>
-                    Admin Panel
-                </h2>
-
-                <div class="stats-grid">
-                    <div class="stat-box">
-                        <div class="stat-label">Jami Foydalanuvchilar</div>
-                        <div class="stat-value">1,243</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-label">Bugun Topshirilgan UC</div>
-                        <div class="stat-value">12,560</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-label">Faol Foydalanuvchilar</div>
-                        <div class="stat-value">587</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-label">Kunlik Ball</div>
-                        <div class="stat-value">75,432</div>
-                    </div>
-                </div>
+                <h3>Foydalanuvchilar statistikasi</h3>
+                <p>Jami foydalanuvchilar: <span id="totalUsers">0</span></p>
+                <h4>TOP 10</h4>
+                <ul id="topUsers"></ul>
             </div>
-
             <div class="card">
-                <h2 class="card-title">
-                    <i class="fas fa-trophy"></i>
-                    Top Foydalanuvchilar
-                </h2>
-                <div class="top-users">
-                    <div class="user-row">
-                        <div class="user-info">
-                            <div class="user-avatar">A</div>
-                            <div>Azizbek</div>
-                        </div>
-                        <div>12,540 ball</div>
-                    </div>
-                    <div class="user-row">
-                        <div class="user-info">
-                            <div class="user-avatar">S</div>
-                            <div>Sanjar</div>
-                        </div>
-                        <div>10,850 ball</div>
-                    </div>
-                    <div class="user-row">
-                        <div class="user-info">
-                            <div class="user-avatar">J</div>
-                            <div>Javohir</div>
-                        </div>
-                        <div>9,320 ball</div>
-                    </div>
-                </div>
+                <h3>Kanallarni boshqarish</h3>
+                <input type="text" id="newChannel" placeholder="Kanal username">
+                <button id="addChannel" class="button">Qo'shish</button>
+                <ul id="adminChannels"></ul>
             </div>
-        </div>
-
-        <!-- Pastki navigatsiya -->
-        <div class="bottom-nav">
-            <div class="nav-item active" data-page="page-click">
-                <i class="fas fa-hand-point-up nav-icon"></i>
-                <span>Bosish</span>
+            <div class="card">
+                <h3>Mass Send</h3>
+                <textarea id="massMessage" placeholder="Xabar matni"></textarea>
+                <button id="sendMass" class="button">Yuborish</button>
             </div>
-            <div class="nav-item" data-page="page-subscribe">
-                <i class="fas fa-users nav-icon"></i>
-                <span>Obuna</span>
-            </div>
-            <div class="nav-item" data-page="page-exchange">
-                <i class="fas fa-exchange-alt nav-icon"></i>
-                <span>UC Almashish</span>
-            </div>
-            <div class="nav-item" data-page="admin-panel" id="admin-nav" style="display: none;">
-                <i class="fas fa-crown nav-icon"></i>
-                <span>Admin</span>
+            <div class="card">
+                <h3>UC So'rovlari</h3>
+                <ul id="ucRequests"></ul>
             </div>
         </div>
     </div>
 
+    <!-- Navigatsiya -->
+    <div class="nav">
+        <button data-page="page1" class="active">🎮</button>
+        <button data-page="page2">📢</button>
+        <button data-page="page3">💱</button>
+    </div>
+
     <script>
-        // Sahifalar navigatsiyasi
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.addEventListener('click', function () {
-                // Nav aktivligini o'zgartirish
-                document.querySelectorAll('.nav-item').forEach(nav => {
-                    nav.classList.remove('active');
-                });
-                this.classList.add('active');
+        // JavaScript - Frontend Logikasi
+        const telegram = window.Telegram.WebApp; // Telegram WebApp API
+        telegram.ready();
 
-                // Sahifalarni ko'rsatish/yashirish
-                const pageId = this.getAttribute('data-page');
-                document.querySelectorAll('.page').forEach(page => {
-                    page.classList.remove('active');
-                });
-                document.querySelectorAll('.admin-section').forEach(section => {
-                    section.classList.remove('active');
-                });
+        // O'zgaruvchilar (backenddan olish kerak, bu misol uchun)
+        let balance = 0;
+        let level = 1;
+        let energy = 10;
+        let cooldown = 0;
+        let tapValue = 0.1;
+        let nextLevelPoints = 50;
+        let currentProgress = 0;
+        let userId = telegram.initDataUnsafe.user.id; // Foydalanuvchi ID
+        let isAdmin = false; // Backenddan tekshirish
 
-                if (pageId === 'admin-panel') {
-                    document.getElementById('admin-panel').classList.add('active');
-                } else {
-                    document.getElementById(pageId).classList.add('active');
-                }
+        // Sahifalarni almashtirish
+        document.querySelectorAll('.nav button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.page').forEach(page => page.classList.add('hidden'));
+                document.getElementById(btn.dataset.page).classList.remove('hidden');
+                document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
             });
         });
 
-        // Bosish funktsiyasi
-        const clickButton = document.getElementById('click-button');
-        const energyElement = document.getElementById('energy');
-        const balanceElement = document.getElementById('balance');
-        const totalPointsElement = document.getElementById('total-points');
-        const clickValueElement = document.getElementById('click-value');
-        const levelElement = document.getElementById('level');
-        const currentLevelElement = document.getElementById('current-level');
-        const nextLevelElement = document.getElementById('next-level');
-        const energyBar = document.getElementById('energy-bar');
-        const cooldownInfo = document.getElementById('cooldown-info');
-        const boostButton = document.getElementById('boost-button');
+        // Backend bilan aloqa (misol uchun fetch orqali)
+        async function fetchBackend(endpoint, data) {
+            return fetch('/api/' + endpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            }).then(res => res.json());
+        }
 
-        let energy = 10;
-        let balance = 125.75;
-        let totalPoints = 125.75;
-        let clickValue = 0.10;
-        let level = 1;
-        let nextLevel = 50;
-        let cooldownTime = 7200; // 2 soat sekundlarda
-        let cooldownInterval;
+        // Balansni yangilash
+        async function updateBalance() {
+            const data = await fetchBackend('get_balance', { user_id: userId });
+            balance = data.balance;
+            level = data.level;
+            energy = data.energy;
+            cooldown = data.cooldown;
+            tapValue = 0.1 + (level - 1) * 0.01;
+            currentProgress = data.progress;
+            nextLevelPoints = data.next_level;
 
-        clickButton.addEventListener('click', function () {
-            if (energy > 0) {
-                // Ball qo'shish
-                balance += clickValue;
-                totalPoints += clickValue;
+            document.getElementById('balance').textContent = balance.toFixed(1);
+            document.getElementById('level').textContent = level;
+            document.getElementById('energy').textContent = `${energy}/10`;
+            document.getElementById('cooldown').textContent = cooldown;
+            document.getElementById('tapValue').textContent = tapValue.toFixed(2);
+            document.getElementById('levelProgress').style.width = `${(currentProgress / nextLevelPoints) * 100}%`;
+
+            if (balance >= 20) {
+                document.getElementById('boostButton').classList.remove('hidden');
+            }
+        }
+
+        // Bosish tugmasi
+        document.getElementById('tapButton').addEventListener('click', async () => {
+            if (energy > 0 && cooldown === 0) {
+                balance += tapValue;
                 energy--;
-
-                // Yangilash
-                updateUI();
-
-                // Level tekshirish
-                checkLevelUp();
-
-                // Energiya tugaganda
+                await fetchBackend('tap', { user_id: userId });
+                updateBalance();
                 if (energy === 0) {
-                    startCooldown();
+                    cooldown = 2; // 2 soat
+                    setTimeout(() => {
+                        energy = 10;
+                        cooldown = 0;
+                        updateBalance();
+                    }, 2 * 60 * 60 * 1000); // 2 soat
+                }
+                // Level oshirish
+                if (balance >= nextLevelPoints) {
+                    level++;
+                    nextLevelPoints *= 2;
+                    await fetchBackend('level_up', { user_id: userId });
                 }
             }
         });
 
-        // Energiya to'ldirish
-        boostButton.addEventListener('click', function () {
-            if (balance >= 5 && energy < 10) {
+        // Energiya Boost
+        document.getElementById('boostButton').addEventListener('click', async () => {
+            if (balance >= 5 && cooldown > 0) {
                 balance -= 5;
-                energy = Math.min(energy + 5, 10);
-                updateUI();
-
-                // Agar cooldown davom etayotgan bo'lsa, to'xtatish
-                if (cooldownInterval) {
-                    clearInterval(cooldownInterval);
-                    cooldownInfo.textContent = "Energiya to'liq!";
-                }
+                cooldown -= 0.5; // Yarim soat qisqartirish
+                await fetchBackend('boost', { user_id: userId });
+                updateBalance();
             }
         });
 
-        function startCooldown() {
-            let timeLeft = cooldownTime;
-
-            cooldownInterval = setInterval(function () {
-                timeLeft--;
-
-                const hours = Math.floor(timeLeft / 3600);
-                const minutes = Math.floor((timeLeft % 3600) / 60);
-                const seconds = timeLeft % 60;
-
-                cooldownInfo.textContent = `Keyingi energiya: ${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-
-                if (timeLeft <= 0) {
-                    clearInterval(cooldownInterval);
-                    energy = 10;
-                    updateUI();
-                    cooldownInfo.textContent = "Energiya to'liq!";
-                }
-            }, 1000);
+        // Kanallar ro'yxati
+        async function loadChannels() {
+            const channels = await fetchBackend('get_channels');
+            const list = document.getElementById('channelsList');
+            list.innerHTML = '';
+            channels.forEach(channel => {
+                const li = document.createElement('li');
+                li.innerHTML = `<a href="https://t.me/${channel.username}" target="_blank">${channel.name}</a> <button onclick="subscribe('${channel.id}')">Obuna bo'lish</button>`;
+                list.appendChild(li);
+            });
         }
 
-        function checkLevelUp() {
-            if (totalPoints >= nextLevel) {
-                level++;
-                clickValue = parseFloat((0.10 + (level - 1) * 0.01).toFixed(2));
-                nextLevel = nextLevel * 2;
-
-                // Yangilash
-                levelElement.textContent = level;
-                currentLevelElement.textContent = level;
-                nextLevelElement.textContent = nextLevel;
-                clickValueElement.textContent = clickValue.toFixed(2);
-
-                // Level up animatsiya
-                clickButton.style.animation = 'none';
-                setTimeout(() => {
-                    clickButton.style.animation = 'pulse 0.5s';
-                }, 10);
+        async function subscribe(channelId) {
+            // Bot tekshiradi
+            const result = await fetchBackend('subscribe_channel', { user_id: userId, channel_id: channelId });
+            if (result.success) {
+                balance += 5;
+                updateBalance();
             }
         }
 
-        function updateUI() {
-            energyElement.textContent = energy;
-            balanceElement.textContent = balance.toFixed(2);
-            totalPointsElement.textContent = totalPoints.toFixed(2);
-            energyBar.style.width = `${energy * 10}%`;
-
-            // Boost tugmasini faollashtirish
-            if (balance >= 5 && energy < 10) {
-                boostButton.disabled = false;
-                boostButton.style.opacity = '1';
-            } else {
-                boostButton.disabled = true;
-                boostButton.style.opacity = '0.7';
-            }
-
-            // Bosish tugmasini faollashtirish
-            if (energy > 0) {
-                clickButton.disabled = false;
-                clickButton.classList.remove('disabled');
-            } else {
-                clickButton.disabled = true;
-                clickButton.classList.add('disabled');
-            }
+        // Referal havola
+        async function loadReferral() {
+            const ref = await fetchBackend('get_referral', { user_id: userId });
+            document.getElementById('referralLink').textContent = ref.link;
         }
 
-        // Referal havolani nusxalash
-        function copyRefLink() {
-            const refLink = document.getElementById('ref-link');
-            refLink.select();
-            document.execCommand('copy');
-            alert('Referal havolasi nusxalandi!');
-        }
-
-        // Admin panelni tekshirish (faqat namuna)
-        // Haqiqiy loyihada bu backend tomonidan tekshiriladi
-        const isAdmin = false; // O'zgartirishingiz mumkin
-        if (isAdmin) {
-            document.getElementById('admin-nav').style.display = 'flex';
-        }
-
-        // Dizayn animatsiyalari
-        document.addEventListener('DOMContentLoaded', function () {
-            // Bosish tugmasi uchun puls animatsiya
-            const style = document.createElement('style');
-            style.textContent = `
-                @keyframes pulse {
-                    0% { transform: scale(1); box-shadow: 0 0 20px rgba(255, 153, 0, 0.5); }
-                    50% { transform: scale(1.05); box-shadow: 0 0 30px rgba(255, 153, 0, 0.8); }
-                    100% { transform: scale(1); box-shadow: 0 0 20px rgba(255, 153, 0, 0.5); }
-                }
-            `;
-            document.head.appendChild(style);
+        document.getElementById('copyReferral').addEventListener('click', () => {
+            navigator.clipboard.writeText(document.getElementById('referralLink').textContent);
         });
 
-        // Dummy data for demonstration
-        updateUI();
+        // UC Paketlari
+        const packages = [
+            { uc: 60, points: 6000 },
+            { uc: 325, points: 32500 }
+        ];
+
+        function loadPackages() {
+            const container = document.getElementById('ucPackages');
+            packages.forEach(pkg => {
+                const card = document.createElement('div');
+                card.classList.add('card');
+                card.innerHTML = `<p>${pkg.uc} UC = ${pkg.points} ball</p><button onclick="selectPackage(${pkg.uc}, ${pkg.points})">Tanlash</button>`;
+                container.appendChild(card);
+            });
+        }
+
+        let selectedPkg = null;
+        function selectPackage(uc, points) {
+            selectedPkg = { uc, points };
+        }
+
+        document.getElementById('exchangeButton').addEventListener('click', async () => {
+            const pubgId = document.getElementById('pubgID').value;
+            if (selectedPkg && balance >= selectedPkg.points) {
+                await fetchBackend('exchange_uc', { user_id: userId, pubg_id: pubgId, uc: selectedPkg.uc, points: selectedPkg.points });
+                balance -= selectedPkg.points;
+                updateBalance();
+                telegram.showAlert('So\'rov yuborildi!');
+            }
+        });
+
+        // Admin Panel
+        async function loadAdmin() {
+            if (!isAdmin) return;
+            document.getElementById('adminPage').classList.remove('hidden');
+            // Statistika
+            const stats = await fetchBackend('admin_stats');
+            document.getElementById('totalUsers').textContent = stats.total;
+            const topList = document.getElementById('topUsers');
+            topList.innerHTML = '';
+            stats.top.forEach(user => {
+                topList.innerHTML += `<li>${user.name}: ${user.balance} ball</li>`;
+            });
+
+            // Kanallar
+            const adminChannels = document.getElementById('adminChannels');
+            adminChannels.innerHTML = '';
+            const channels = await fetchBackend('get_channels');
+            channels.forEach(ch => {
+                adminChannels.innerHTML += `<li>${ch.name} <button onclick="removeChannel('${ch.id}')">O'chirish</button></li>`;
+            });
+        }
+
+        document.getElementById('addChannel').addEventListener('click', async () => {
+            const username = document.getElementById('newChannel').value;
+            await fetchBackend('add_channel', { username });
+            loadAdmin();
+        });
+
+        async function removeChannel(id) {
+            await fetchBackend('remove_channel', { id });
+            loadAdmin();
+        }
+
+        document.getElementById('sendMass').addEventListener('click', async () => {
+            const message = document.getElementById('massMessage').value;
+            await fetchBackend('mass_send', { message });
+        });
+
+        // UC So'rovlari
+        async function loadRequests() {
+            const requests = await fetchBackend('get_uc_requests');
+            const list = document.getElementById('ucRequests');
+            list.innerHTML = '';
+            requests.forEach(req => {
+                list.innerHTML += `<li>${req.user}: ${req.uc} UC <button onclick="approveRequest('${req.id}')">Tasdiqlash</button> <button onclick="rejectRequest('${req.id}')">Bekor</button></li>`;
+            });
+        }
+
+        async function approveRequest(id) {
+            await fetchBackend('approve_uc', { id });
+            loadRequests();
+        }
+
+        async function rejectRequest(id) {
+            await fetchBackend('reject_uc', { id });
+            loadRequests();
+        }
+
+        // Inicializatsiya
+        async function init() {
+            const userData = await fetchBackend('init_user', { user_id: userId, ref: telegram.initDataUnsafe.start_param });
+            isAdmin = userData.is_admin;
+            updateBalance();
+            loadChannels();
+            loadReferral();
+            loadPackages();
+            if (isAdmin) loadAdmin();
+            loadRequests(); // Admin uchun
+        }
+
+        init();
+
+        // Real-time yangilash uchun interval
+        setInterval(updateBalance, 60000); // Har minutda
     </script>
 </body>
-
 </html>
