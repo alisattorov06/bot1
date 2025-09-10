@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PUBG UC Farm</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sahifa kontentlari -->
+        <div id="page-click" class="page active">
+            <h2>🎮 Bosish & Ball yig‘ish</h2>
+            <div class="stats">
+                <div>Balans: <span id="balance">0</span> ball</div>
+                <div>Level: <span id="level">1</span></div>
+                <div>Qolgan bosish: <span id="energy">10</span></div>
+            </div>
+            <button id="click-btn" class="btn-click">BOS (+0.1)</button>
+            <div id="cooldown" class="cooldown hidden">⏳ 2 soatdan keyin qayta urinib ko‘ring</div>
+            <button id="boost-btn" class="btn-boost hidden">⚡ Energiya tezlashtir (5 ball)</button>
+        </div>
+
+        <div id="page-channels" class="page">
+            <h2>📢 Kanallarga Obuna</h2>
+            <div id="channels-list"></div>
+            <h3>🔗 Referal havolangiz:</h3>
+            <div id="ref-link" class="ref-link">t.me/ucfarmbot?start=ref12345</div>
+            <div>Do‘stlar qo‘shganingiz uchun: +5 ball</div>
+        </div>
+
+        <div id="page-exchange" class="page">
+            <h2>💱 UC Ayirboshlash</h2>
+            <input type="text" id="pubg-id" placeholder="PUBG ID raqamingizni kiriting" class="input-pubg">
+            <div class="uc-packages">
+                <div class="uc-card" data-cost="6000" data-uc="60">60 UC — 6000 ball</div>
+                <div class="uc-card" data-cost="32500" data-uc="325">325 UC — 32500 ball</div>
+            </div>
+            <button id="exchange-btn" class="btn-exchange">✅ So‘rov yuborish</button>
+        </div>
+
+        <!-- Navigatsiya (pastda) -->
+        <div class="nav">
+            <button class="nav-btn active" data-page="page-click">🎮</button>
+            <button class="nav-btn" data-page="page-channels">📢</button>
+            <button class="nav-btn" data-page="page-exchange">💱</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
